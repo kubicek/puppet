@@ -13,6 +13,7 @@ Puppet::Reports.register_report(:http) do
   def process
     url = URI.parse(Puppet[:reporturl])
     req = Net::HTTP::Post.new(url.path)
+    req.basic_auth(url.user, url.password) if url.user
     req.body = self.to_yaml
     req.content_type = "application/x-yaml"
     Net::HTTP.new(url.host, url.port).start {|http|
